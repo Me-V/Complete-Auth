@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    outputFileTracingRoot: "C:\\Users\\Vasu sharma\\Desktop\\mern-advanced-auth\\frontend2",
 };
 
 export default nextConfig;

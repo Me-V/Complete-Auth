@@ -13,11 +13,14 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.API_URL}/signup`, {
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/signup`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
 
       setMessage(response.data.message);
     } catch (error: any) {
@@ -30,10 +33,14 @@ const SignUpForm = () => {
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto mt-10 p-6 bg-white rounded-lg shadow-md space-y-4"
     >
-      <h2 className="text-xl font-semibold text-gray-800 text-center">Sign Up</h2>
+      <h2 className="text-xl font-semibold text-gray-800 text-center">
+        Sign Up
+      </h2>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Name
+        </label>
         <input
           type="text"
           value={name}
@@ -44,7 +51,9 @@ const SignUpForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Email
+        </label>
         <input
           type="email"
           value={email}
@@ -55,7 +64,9 @@ const SignUpForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
         <input
           type="password"
           value={password}
@@ -72,7 +83,9 @@ const SignUpForm = () => {
         Sign Up
       </button>
 
-      {message && <p className="text-center text-sm text-gray-700">{message}</p>}
+      {message && (
+        <p className="text-center text-sm text-gray-700">{message}</p>
+      )}
     </form>
   );
 };
