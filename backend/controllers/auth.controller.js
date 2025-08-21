@@ -9,6 +9,7 @@ import {
 	sendWelcomeEmail,
 } from "../mailtrap/emails.js";
 import { User } from "../models/user.model.js";
+import { sendVerificationEmailEthereal, sendWelcomeEmailEthereal } from "../nodemailer/etherealMail.js";
 
 export const signup = async (req, res) => {
 	const { email, password, name } = req.body;
@@ -41,7 +42,7 @@ export const signup = async (req, res) => {
 		// jwt
 		generateTokenAndSetCookie(res, user._id);
 
-		await sendVerificationEmail(user.email, verificationToken);
+		await sendVerificationEmailEthereal(user.email, verificationToken);
 
 		res.status(201).json({
 			success: true,
@@ -73,7 +74,7 @@ export const verifyEmail = async (req, res) => {
 		user.verificationTokenExpiresAt = undefined;
 		await user.save();
 
-		await sendWelcomeEmail(user.email, user.name);
+		await sendWelcomeEmailEthereal(user.email, user.name);
 
 		res.status(200).json({
 			success: true,
