@@ -24,6 +24,9 @@ const SignUpForm = () => {
           name,
           email,
           password,
+        },
+        {
+          withCredentials: true,
         }
       );
 
