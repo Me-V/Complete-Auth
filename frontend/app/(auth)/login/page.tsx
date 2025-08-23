@@ -118,14 +118,11 @@ export default function LoginPage() {
 
             {/* forgot password */}
             <div className="flex justify-between items-center text-sm text-gray-400 text-center mt-6">
-              <a href="#" className="text-green-500 hover:underline">
-                Don't have an account?
-              </a>
               <button
                 onClick={() => setOpenForgotPassword(true)}
-                className="text-green-500 hover:underline"
+                className="text-green-500 underline cursor-pointer"
               >
-                Forgot Password
+                Forgot Password ?
               </button>
             </div>
 
