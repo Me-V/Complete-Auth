@@ -1,10 +1,13 @@
-// components/SignUpForm.tsx
 "use client";
 
 import { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Verification from "./VerificationDailog";
+
+type ApiResponse = {
+  success: boolean;
+  message: string;
+};
 
 const SignUpForm = () => {
   const [name, setName] = useState("");
@@ -13,12 +16,10 @@ const SignUpForm = () => {
   const [message, setMessage] = useState("");
   const [openVerification, setOpenVerification] = useState(false);
 
-  const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await axios.post<ApiResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/signup`,
         {
           name,
@@ -39,8 +40,12 @@ const SignUpForm = () => {
 
         setOpenVerification(true);
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(error.response?.data?.message || "Something went wrong");
+      } else {
+        setMessage("Something went wrong");
+      }
     }
   };
 

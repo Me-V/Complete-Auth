@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
 const Verification = () => {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
@@ -11,7 +16,7 @@ const Verification = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await axios.post<ApiResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/verify-email`,
         { code }
       );
@@ -22,8 +27,12 @@ const Verification = () => {
         setCode("");
         router.push("/");
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.error || "Something went wrong");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(error.response?.data?.message || "Something went wrong");
+      } else {
+        setMessage("Something went wrong");
+      }
     }
   };
 

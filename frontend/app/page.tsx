@@ -1,11 +1,15 @@
 "use client";
-import SimpleForm from "./components/SimpleForm";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+type User = {
+  name: string;
+  email: string;
+};
+
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();

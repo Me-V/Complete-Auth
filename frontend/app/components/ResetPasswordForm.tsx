@@ -5,6 +5,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
+type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
 export default function ResetPasswordForm({ slug }: { slug: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -17,7 +22,7 @@ export default function ResetPasswordForm({ slug }: { slug: string }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.post<ApiResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/reset-password/${slug}`,
         { password },
         { withCredentials: true }
@@ -29,8 +34,12 @@ export default function ResetPasswordForm({ slug }: { slug: string }) {
         setPassword("");
         router.push("/login");
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(error.response?.data?.message || "Something went wrong");
+      } else {
+        setMessage("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }

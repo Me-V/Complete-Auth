@@ -4,6 +4,12 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+// ✅ Define API response type (adjust according to your backend)
+type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -18,15 +24,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.post<ApiResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/login`,
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
+        { email, password },
+        { withCredentials: true }
       );
 
       setMessage(response.data.message);
@@ -34,11 +35,14 @@ export default function LoginPage() {
       if (response.data.success) {
         setEmail("");
         setPassword("");
-
         router.push("/");
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(error.response?.data?.message || "Something went wrong");
+      } else {
+        setMessage("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -47,14 +51,10 @@ export default function LoginPage() {
   const handleForgotPasswordSubmit = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.post<ApiResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/forgot-password`,
-        {
-          email,
-        },
-        {
-          withCredentials: true,
-        }
+        { email },
+        { withCredentials: true }
       );
 
       setMessage(response.data.message);
@@ -63,8 +63,12 @@ export default function LoginPage() {
         setEmail("");
         router.push("/login");
       }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setMessage(error.response?.data?.message || "Something went wrong");
+      } else {
+        setMessage("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -116,9 +120,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* forgot password */}
+            {/* Forgot password */}
             <div className="flex justify-between items-center text-sm text-gray-400 text-center mt-6">
               <button
+                type="button"
                 onClick={() => setOpenForgotPassword(true)}
                 className="text-green-500 underline cursor-pointer"
               >
@@ -162,7 +167,7 @@ export default function LoginPage() {
             className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-4"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Submit"}
+            {loading ? "Submitting..." : "Submit"}
           </button>
           <button
             onClick={() => setOpenForgotPassword(false)}
