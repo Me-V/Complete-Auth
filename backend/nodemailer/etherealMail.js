@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE } from "../mailtrap/emailTemplates.js";
+import { VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE } from "../mailtrap/emailTemplates.js";
 
 export const sendVerificationEmailEthereal = async (
   email,
@@ -96,5 +96,35 @@ export const sendPasswordResetEmailEthereal = async (email, resetURL) => {
     console.error(`Error sending password reset email`, error);
 
     throw new Error(`Error sending password reset email: ${error}`);
+  }
+};
+
+export const sendResetSuccessEmailEthereal = async (email) => {
+  try {
+    const testAccount = await nodemailer.createTestAccount();
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      auth: {
+        user: "lon47@ethereal.email",
+        pass: "vNhY5gmDBZ6dkYTwBz",
+      },
+    });
+
+    const response = await transporter.sendMail({
+      from: "Vasu, <Vasu@ethereal.email>",
+      to: email,
+      subject: "Password Reset Successful",
+      html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+      category: "Password Reset",
+    });
+
+    console.log("Password reset successfully", response);
+  } catch (error) {
+
+    console.error(`Error reseting password`, error);
+
+    throw new Error(`Error reseting password: ${error}`);
   }
 };
