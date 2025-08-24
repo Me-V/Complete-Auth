@@ -81,9 +81,9 @@ export default function Home() {
           <h1 className="text-center text-5xl text-green-300 font-serif mb-10">
             welcome {user.name}
           </h1>
-          <h1 className="text-center text-2xl text-green-300">
+          {user.email && <h1 className="text-center text-2xl text-green-300">
             Mail :- {user.email}
-          </h1>
+          </h1>}
         </div>
       )}
     </div>

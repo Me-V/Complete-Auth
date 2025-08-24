@@ -4,12 +4,10 @@ const userSchema = new mongoose.Schema(
 	{
 		email: {
 			type: String,
-			required: true,
 			unique: true,
 		},
 		password: {
 			type: String,
-			required: true,
 		},
 		name: {
 			type: String,
@@ -23,10 +21,16 @@ const userSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		phone: {
+			type: String,
+			unique: true,
+		},
 		resetPasswordToken: String,
 		resetPasswordExpiresAt: Date,
 		verificationToken: String,
 		verificationTokenExpiresAt: Date,
+		otp: String,
+		otpExpiresAt: Date,
 	},
 	{ timestamps: true }
 );

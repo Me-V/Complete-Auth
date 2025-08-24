@@ -3,7 +3,7 @@ import SimpleForm from '@/app/components/SimpleForm'
 
 const signup = () => {
   return (
-    <div className=''>
+    <div className='min-h-screen flex items-center justify-center bg-gray-900'>
         <SimpleForm />
     </div>
   )
