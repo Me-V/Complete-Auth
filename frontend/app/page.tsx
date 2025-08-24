@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut, LogIn } from "lucide-react";
 
 type User = {
   name: string;
@@ -22,7 +22,7 @@ export default function Home() {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/check-auth`,
           {
-            withCredentials: true, // VERY IMPORTANT for cookies
+            withCredentials: true,
           }
         );
         setUser(res.data.user);
@@ -40,8 +40,8 @@ export default function Home() {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/logout`,
-        {}, // body (empty for logout)
-        { withCredentials: true } // config (cookies included here)
+        {},
+        { withCredentials: true }
       );
       if (response.data.success) {
         setUser(null);
@@ -55,35 +55,45 @@ export default function Home() {
   };
 
   if (loading) {
-    return <div className="h-[80vh] flex flex-col items-center justify-center"><Loader2 size={48} className="animate-spin" /></div>;
+    return (
+      <div className="h-[80vh] flex flex-col items-center justify-center text-green-400">
+        <Loader2 size={48} className="animate-spin" />
+        <p className="mt-4 text-lg">Loading...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="h-[80vh] flex flex-col items-center justify-center">
-      {user !== null ? (
-        <button
-          className="mb-3 cursor-pointer bg-red-500 text-white px-4 py-2 rounded"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-      ) : (
-        <button
-          className="mb-3 cursor-pointer bg-green-500 text-white px-4 py-2 rounded"
-          onClick={() => router.push("/login")}
-        >
-          Login
-        </button>
-      )}
-
-      {user !== null && (
-        <div className="flex flex-col items-center justify-center gap-2">
-          <h1 className="text-center text-5xl text-green-300 font-serif mb-10">
-            welcome {user.name}
+    <div className="h-[100vh] w-full flex flex-col items-center justify-center bg-gray-900 text-white px-6">
+      {user ? (
+        <div className="flex flex-col items-center gap-6 bg-gray-800/70 rounded-2xl p-10 shadow-xl w-full max-w-lg">
+          <h1 className="text-4xl font-bold text-green-400">
+            Welcome, {user.name} 👋
           </h1>
-          {user.email && <h1 className="text-center text-2xl text-green-300">
-            Mail :- {user.email}
-          </h1>}
+          {user.email && (
+            <p className="text-lg text-gray-300">
+              📧 <span className="text-green-300">{user.email}</span>
+            </p>
+          )}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition"
+          >
+            <LogOut size={20} /> Logout
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-6 bg-gray-800/70 rounded-2xl p-10 shadow-xl w-full max-w-lg">
+          <h1 className="text-4xl font-bold text-green-400">Welcome 👋</h1>
+          <p className="text-gray-300 text-center">
+            Please login to continue and explore.
+          </p>
+          <button
+            onClick={() => router.push("/login")}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition"
+          >
+            <LogIn size={20} /> Login
+          </button>
         </div>
       )}
     </div>
