@@ -3,6 +3,7 @@ import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 // ✅ Define API response type (adjust according to your backend)
 type ApiResponse = {
@@ -36,12 +37,13 @@ export default function LoginPage() {
         setEmail("");
         setPassword("");
         router.push("/");
+        toast.success("Logged in successfully");
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        setMessage(error.response?.data?.message || "Something went wrong");
+        toast.error(error.response?.data?.message || "Invalid credentials");
       } else {
-        setMessage("Something went wrong");
+        toast.error("Error in logging in");
       }
     } finally {
       setLoading(false);
@@ -62,12 +64,13 @@ export default function LoginPage() {
       if (response.data.success) {
         setEmail("");
         router.push("/login");
+        toast.success("Email sent successfully");
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        setMessage(error.response?.data?.message || "Something went wrong");
+        toast.error(error.response?.data?.message || "Error in sending email");
       } else {
-        setMessage("Something went wrong");
+        toast.error("Error in sending email");
       }
     } finally {
       setLoading(false);
@@ -176,10 +179,6 @@ export default function LoginPage() {
           >
             Back
           </button>
-
-          {message && (
-            <p className="text-center text-sm mt-4 text-red-500">{message}</p>
-          )}
         </div>
       )}
     </div>

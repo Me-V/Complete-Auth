@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 type User = {
   name: string;
@@ -44,14 +46,16 @@ export default function Home() {
       if (response.data.success) {
         setUser(null);
         router.push("/login");
+        toast.success("Logged out successfully");
       }
     } catch (error) {
       console.log("Logout failed", error);
+      toast.error("Logout failed");
     }
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className="h-[80vh] flex flex-col items-center justify-center"><Loader2 size={48} className="animate-spin" /></div>;
   }
 
   return (

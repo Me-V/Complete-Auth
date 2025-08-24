@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 
 type ApiResponse = {
@@ -33,12 +34,15 @@ export default function ResetPasswordForm({ slug }: { slug: string }) {
       if (response.data.success) {
         setPassword("");
         router.push("/login");
+        toast.success("Password reset successfully");
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         setMessage(error.response?.data?.message || "Something went wrong");
+        toast.error(error.response?.data?.message || "Error in resetting password");
       } else {
         setMessage("Something went wrong");
+        toast.error("Error in resetting password");
       }
     } finally {
       setLoading(false);
